@@ -18,6 +18,13 @@ At the moment, only the following operation(s) are supported:
     
 * `/create_user?group=group_name` - Creates a new user in the group `group_name`. If there are no errors, the response will be a string of the form `aws_access_key_id:aws_secret_access_key` which can be used immediately.
 
+Policy
+======
+
+To prevent DDOS attacks against your service, awskeyserver optionally supports PolicyHandlers that can present various challenges to clients which they must pass in order to obtain a key. The following are currently supported:
+
+* reCAPTCHA: If a `CaptchaValidator` is assigned to a group, a request will be met with a reCAPTCHA challenge id instead. The client must use the id to fetch the corresponding reCAPTCHA image, and send the response to awskeyserver, where it will be verified. If it passes, only then will the account key be created and returned.
+
 TODO
 ====
 

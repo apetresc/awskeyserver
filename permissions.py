@@ -1,1 +1,3 @@
-allowed_groups = [ "Users" ]
+from captcha import CaptchaValidator
+
+policy = { "Users" : CaptchaValidator() }

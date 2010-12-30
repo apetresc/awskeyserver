@@ -3,6 +3,7 @@ import uuid
 
 import credentials
 import permissions
+from policy import PolicyResponseCode
 
 from boto.iam import IAMConnection
 from boto.exception import BotoServerError
@@ -17,9 +18,13 @@ class CreateUser(webapp.RequestHandler):
 
         if not group:
             self.response.out.write("ERROR: Must specify a group")
-        elif group not in permissions.allowed_groups:
+        elif group not in permissions.policy:
             self.response.out.write("ERROR: Not an allowed group")
         else:
+            if (permissions.policy[group]):
+                action = permissions.policy[group].handle(self.request, self.response)
+                if action is PolicyResponseCode.DENY or action is PolicyResponseCode.CHALLENGE:
+                    return
             user_name = uuid.uuid4().hex
             try:
                 conn.create_user(user_name)
